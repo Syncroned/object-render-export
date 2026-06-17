@@ -14,7 +14,6 @@ public:
         geode::log::debug("ExportPopup allocated: {}", fmt::ptr(ret));
         if (ret && ret->init(340.f, 240.f)) {
             geode::log::debug("ExportPopup::init() succeeded");
-            // Manually call setup() since Geode Popup isn't calling it
             if (!ret->setup()) {
                 geode::log::error("ExportPopup::setup() failed");
                 delete ret;
@@ -37,11 +36,9 @@ protected:
     CCMenuItemToggler* m_transparentToggle = nullptr;
     std::vector<CCMenuItemSpriteExtra*> m_presetButtons;
 
-    // Selected preset dimensions
     int m_presetW = 1920;
     int m_presetH = 1080;
 
-    // Selected file path from dialog
     std::string m_selectedPath;
 
     bool setup() {
@@ -52,7 +49,6 @@ protected:
         auto* layer = m_mainLayer;
         geode::log::debug("m_mainLayer: {}", fmt::ptr(layer));
 
-        // ── Preset buttons ──────────────────────────────
         struct Preset { const char* label; int w; int h; };
         constexpr Preset presets[] = {
             {"720p",  1280,  720},
@@ -71,15 +67,14 @@ protected:
         presetMenu->setPosition({170.f, 185.f});
 
         for (auto& p : presets) {
-            // Use GJ_button_02 for the initially selected preset (1080p), GJ_button_04 for others
             const char* texture = (p.w == 1920 && p.h == 1080) ? "GJ_button_02.png" : "GJ_button_04.png";
             auto* btn = CCMenuItemSpriteExtra::create(
                 ButtonSprite::create(p.label, 52, true, "bigFont.fnt", texture, 28.f, 0.6f),
                 this,
                 menu_selector(ExportPopup::onPreset)
             );
-            btn->setTag(p.w);            // store width in tag
-            btn->setUserData((void*)(intptr_t)p.h); // store height in userdata
+            btn->setTag(p.w);
+            btn->setUserData((void*)(intptr_t)p.h);
             presetMenu->addChild(btn);
             m_presetButtons.push_back(btn);
         }
@@ -88,13 +83,11 @@ protected:
         layer->addChild(presetMenu);
         geode::log::debug("Added presetMenu with {} children", presetMenu->getChildrenCount());
 
-        // ── Dimension display ──────────
         m_dimLabel = CCLabelBMFont::create("1920 × 1080", "bigFont.fnt");
         m_dimLabel->setScale(0.55f);
         m_dimLabel->setPosition({170.f, 148.f});
         layer->addChild(m_dimLabel);
 
-        // ── Transparent BG toggle ───────────────────────
         auto* toggleLabel = CCLabelBMFont::create("Transparent BG", "bigFont.fnt");
         toggleLabel->setScale(0.45f);
         toggleLabel->setPosition({130.f, 108.f});
@@ -110,7 +103,6 @@ protected:
         toggleMenu->addChild(m_transparentToggle);
         layer->addChild(toggleMenu);
 
-        // ── Export button ────────────────────────────────
         auto* exportMenu = CCMenu::create();
         exportMenu->setPosition({170.f, 62.f});
 
@@ -122,7 +114,6 @@ protected:
         exportMenu->addChild(exportBtn);
         layer->addChild(exportMenu);
 
-        // ── Clear logs button ────────────────────────────
         auto* clearLogsMenu = CCMenu::create();
         clearLogsMenu->setPosition({280.f, 28.f});
 
@@ -134,7 +125,6 @@ protected:
         clearLogsMenu->addChild(clearLogsBtn);
         layer->addChild(clearLogsMenu);
 
-        // ── Object count hint ────────────────────────────
         auto* editor = LevelEditorLayer::get();
         int count = 0;
         if (editor) {
@@ -155,13 +145,11 @@ protected:
         m_presetW = sender->getTag();
         m_presetH = (int)(intptr_t)static_cast<CCNode*>(sender)->getUserData();
 
-        // Update button textures - selected gets GJ_button_02, others get GJ_button_04
         for (auto* btn : m_presetButtons) {
             int btnW = btn->getTag();
             int btnH = (int)(intptr_t)btn->getUserData();
             const char* texture = (btnW == m_presetW && btnH == m_presetH) ? "GJ_button_02.png" : "GJ_button_04.png";
 
-            // Get the preset label from the button's tag/userdata
             const char* label = nullptr;
             if (btnW == 1280 && btnH == 720) label = "720p";
             else if (btnW == 1920 && btnH == 1080) label = "1080p";
@@ -213,10 +201,8 @@ protected:
 
         bool transparent = m_transparentToggle->isToggled();
 
-        // Use the selected path from file dialog
         std::string fullPath = m_selectedPath;
         if (fullPath.empty()) {
-            // Fallback to settings if dialog was cancelled
             std::string folder = Mod::get()->getSettingValue<std::string>("export-path");
             if (folder.empty()) {
                 folder = (std::filesystem::path(CCFileUtils::get()->getWritablePath())).string();

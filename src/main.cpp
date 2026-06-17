@@ -144,7 +144,6 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
     CCArray* selected = ui->getSelectedObjects();
     if (!selected || selected->count() == 0) return false;
 
-    // Debug log written to a file next to the exported image
     std::ostringstream debugLog;
     auto logLine = [&](std::string const& line) {
         debugLog << line << "\n";
@@ -169,14 +168,12 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
 
     auto* effectManager = lel->m_effectManager;
 
-    // Returns true if the color channel has "Blending" toggle on
     auto channelBlends = [&](int channelId) -> bool {
         if (!effectManager) return false;
         auto* ca = effectManager->getColorAction(channelId);
         return ca && ca->m_blending;
     };
 
-    // Build draw-order key from scene graph: (zOrder, sibling index) chain from root to node
     auto computeDrawKey = [](CCNode* node) {
         std::vector<std::pair<int, int>> key;
         for (CCNode* n = node; n != nullptr; n = n->getParent()) {
@@ -203,7 +200,6 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
         data.uniqueID = obj->m_uniqueID;
         data.drawKey = computeDrawKey(obj);
 
-        // Blending from object OR color channel (channel toggle is what GD renders additively)
         int baseChan = obj->m_baseColor ? obj->m_baseColor->m_colorID : -1;
         int detailChan = obj->m_detailColor ? obj->m_detailColor->m_colorID : -1;
         data.shouldBlendBase = obj->m_shouldBlendBase ||
@@ -237,7 +233,6 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
         originalData.push_back(data);
     }
 
-    // Sort by real editor draw order from scene graph (reproduces GD's exact rendering order)
     std::stable_sort(originalData.begin(), originalData.end(),
         [](ObjectData const& a, ObjectData const& b) {
             if (a.drawKey != b.drawKey) return a.drawKey < b.drawKey;
@@ -256,13 +251,11 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
     CCSprite* sprite = ui->spriteFromObjectString(objString, false, false, INT_MAX, objArray, nullptr, nullptr);
     lel->updateObjectColors(objArray);
 
-    // Sprite that should blend, paired with blend func
     struct BlendSprite { CCSprite* sprite; ccBlendFunc func; bool blend; };
     std::vector<BlendSprite> renderSprites;
 
     const ccBlendFunc additive = {GL_SRC_ALPHA, GL_ONE};
 
-    // Recursively collect CCSprites in subtree, skipping given subtrees
     auto collectSprites = [&](CCNode* root, std::vector<CCNode*> const& skips,
                               std::vector<CCSprite*>& out) {
         std::function<void(CCNode*)> rec = [&](CCNode* node) {
@@ -287,14 +280,10 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
         if (data.isVisible && visibleIndex < objArray->count()) {
             GameObject* gameObject = static_cast<GameObject*>(objArray->objectAtIndex(visibleIndex));
 
-            // Colors resolved by updateObjectColors; overriding would re-introduce selection tint
-
             gameObject->setOpacity(data.opacity);
 
-            // Base blending covers whole object except detail sprite; detail blending covers just color sprite
             std::vector<CCSprite*> toBlend;
             if (data.shouldBlendBase) {
-                // Skip detail subtree and glow (forcing glow additive on additive base over-brightens)
                 collectSprites(gameObject,
                     {gameObject->m_colorSprite, gameObject->m_glowSprite}, toBlend);
             }
@@ -309,8 +298,6 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
         }
     }
 
-    // Batched sprites ignore their own blend func (batch node's func is used).
-    // Detach blending sprites from batch node and re-add as standalone to honor their blend func.
     int detachedCount = 0;
     int blendCount = 0;
     for (auto const& rs : renderSprites) {
@@ -322,13 +309,11 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
         logLine(fmt::format("[export] blend sprite parent={} batchNode={}",
             fmt::ptr(parent), fmt::ptr(bn)));
 
-        // Not batched: sprite honors its own blend func, set in place
         if (!bn || !parent) {
             s->setBlendFunc(rs.func);
             continue;
         }
 
-        // Batched: detach and re-add as standalone child
         int z = parent->getZOrder();
         CCPoint worldPos = parent->convertToWorldSpace(s->getPosition());
         CCPoint localPos = sprite->convertToNodeSpace(worldPos);
@@ -343,14 +328,11 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
     }
     logLine(fmt::format("[export] blendCount={} detachedCount={}", blendCount, detachedCount));
 
-    // Use base content size to avoid double-scaling from sprite's built-in scale
     CCSize contentSize = sprite->getContentSize();
     sprite->setPosition(contentSize / 2);
 
     CCSize renderSize = {static_cast<float>(width), static_cast<float>(height)};
 
-    // CCRenderTexture::create takes points, not pixels. Divide by content scale factor
-    // to get correct pixel dimensions in the final output.
     float csf = CCDirector::get()->getContentScaleFactor();
     CCSize rtPoints = { renderSize.width / csf, renderSize.height / csf };
 
@@ -364,7 +346,6 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
 
     rt->beginWithClear(0, 0, 0, transparentBg ? 0 : 1);
 
-    // Recalculate scale using point space dimensions
     float scaleX = rtPoints.width / contentSize.width;
     float scaleY = rtPoints.height / contentSize.height;
     float scale = std::min(scaleX, scaleY);
@@ -379,14 +360,12 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
     bool saved = false;
     if (img) {
         std::filesystem::create_directories(std::filesystem::path(path).parent_path());
-        // Keep alpha channel (beginWithClear already set alpha based on transparentBg)
         saved = img->saveToFile(path.c_str(), false);
         img->release();
     }
 
     rt->release();
 
-    // Write debug log to mod's save directory if enabled
     if (Mod::get()->getSettingValue<bool>("enable-logs")) {
         auto logDir = Mod::get()->getSaveDir() / "logs";
         std::filesystem::create_directories(logDir);
@@ -403,7 +382,6 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, std::strin
 
 $execute {
 #ifdef _WIN32
-    // Set default export folder to Pictures if not configured
     auto mod = Mod::get();
     auto exportPath = mod->getSettingValue<std::filesystem::path>("export-path");
     if (exportPath.empty()) {
@@ -452,7 +430,6 @@ class $modify(MyEditorUI, EditorUI) {
             return;
         }
 
-        // Generate random filename for both platforms
         auto now = std::chrono::system_clock::now();
         auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
         std::string randomStr = std::to_string(timestamp);
@@ -462,10 +439,8 @@ class $modify(MyEditorUI, EditorUI) {
         bool directSave = Mod::get()->getSettingValue<bool>("direct-save");
 
         if (directSave) {
-            // Direct save mode: use configured export folder
             auto exportPath = Mod::get()->getSettingValue<std::filesystem::path>("export-path");
             if (exportPath.empty()) {
-                // Default to Pictures folder on Windows
                 PWSTR picsPath = nullptr;
                 if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_Pictures, 0, NULL, &picsPath))) {
                     int len = WideCharToMultiByte(CP_UTF8, 0, picsPath, -1, NULL, 0, NULL, NULL);
@@ -492,7 +467,6 @@ class $modify(MyEditorUI, EditorUI) {
                 geode::log::error("Failed to create ExportPopup");
             }
         } else {
-            // Folder picker mode: let user select folder, then auto-generate filename
             std::string folderPath = showFolderPickerDialog();
             if (folderPath.empty()) {
                 return;
@@ -512,7 +486,6 @@ class $modify(MyEditorUI, EditorUI) {
             }
         }
 #else
-        // On Android, auto-export to configured export folder (default Downloads/Exports)
         auto exportPath = Mod::get()->getSettingValue<std::filesystem::path>("export-path");
         if (exportPath.empty()) {
             exportPath = std::filesystem::path("/storage/emulated/0/Download/Exports");
@@ -520,7 +493,6 @@ class $modify(MyEditorUI, EditorUI) {
 
         auto exportsDir = exportPath;
 
-        // Create folder if it doesn't exist
         std::filesystem::create_directories(exportsDir);
 
         auto filePath = exportsDir / fileName;
