@@ -42,11 +42,18 @@ jobs:
           name: object-render-export
           path: ${{ steps.build.outputs.build-output }}
 
+      - name: Create source zip
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          git archive --format=zip --output=source.zip HEAD
+
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ steps.build.outputs.build-output }}
+          files: |
+            ${{ steps.build.outputs.build-output }}
+            source.zip
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
