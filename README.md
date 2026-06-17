@@ -61,17 +61,6 @@ The file is automatically named `object_export-[timestamp].png` and saved to you
 
 ---
 
-## Known limitations / future work
-
-| Limitation | Notes |
-|---|---|
-| Sub-objects / custom hitboxes | Only the main sprite frame is captured. Objects that render multiple child sprites (e.g. animated objects, slope variants) need recursive child traversal - see TODO in main.cpp |
-| Active pulse animation | Pulse colors captured as static stored value; the editor doesn't run pulse animations |
-| Glow layer | GD renders a separate glow pass below objects. Glow sprites are children of the object in some cases; this mod currently uses the main blend func which covers most glow but may miss the dedicated glow sprite in edge cases |
-| Custom shader objects | Any object using a custom GLSL shader (Geode mods, etc.) will render with the base texture only, but how that's even supposed to work is up to you |
-
----
-
 ## Credits
 
 **Huge thanks to [RGC Exists](https://github.com/rgc-exists) for inspiring this mod with [ObjectsToImage](https://github.com/rgc-exists/ObjectsToImage)**
