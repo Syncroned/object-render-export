@@ -9,7 +9,7 @@
     "version": "1.0.0",
     "developer": "Sync",
     "description": "Export selected editor objects as a PNG at any resolution, respecting z-order, blending, color channels, opacity, toggle, and pulse state.",
-    "links": { "source": "[placeholder]" },
+    "links": { "source": "https://github.com/Syncroned/object-render-export" },
     "resources": {
         "spritesheets": {
             "ObjectRenderExportButton": [
