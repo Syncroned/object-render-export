@@ -1,6 +1,8 @@
 # Object Render Export — Geode Mod
 **GD 2.2081 · Geode 5.7.x**
 
+![Logo](https://raw.githubusercontent.com/Syncroned/object-render-export/refs/heads/main/logo.png)
+
 **Available on Windows and Android only** (I'm too lazy to support other platforms ayayayayaya yoy)
 
 Exports selected editor objects as a PNG at preset resolutions (720p, 1080p, 1440p, 4K), respecting:
