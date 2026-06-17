@@ -1,0 +1,40 @@
+{
+    "geode": "5.7.1",
+    "gd": {
+        "win": "2.2081",
+        "android": "2.2081"
+    },
+    "id": "sync.object_render_export",
+    "name": "Object Render Export",
+    "version": "1.0.0",
+    "developer": "Sync",
+    "description": "Export selected editor objects as a PNG at any resolution, respecting z-order, blending, color channels, opacity, toggle, and pulse state.",
+    "links": { "source": "[placeholder]" },
+    "resources": {
+        "spritesheets": {
+            "ObjectRenderExportButton": [
+                "resources/ExportButton.png"
+            ]
+        }
+    },
+    "settings": {
+        "export-path": {
+            "name": "Export folder",
+            "description": "Where exported PNGs are saved. Defaults to Downloads/Exports on Android, Pictures on Windows (when direct save is enabled).",
+            "type": "folder",
+            "default": ""
+        },
+        "direct-save": {
+            "name": "Direct save (Windows)",
+            "description": "Save directly to export folder without file picker. Only affects Windows. Android always uses direct save.",
+            "type": "bool",
+            "default": false
+        },
+        "enable-logs": {
+            "name": "Enable debug logs",
+            "description": "Create debug log files for troubleshooting. Logs are saved in the mod's folder. Clear logs via the export popup.",
+            "type": "bool",
+            "default": false
+        }
+    }
+}

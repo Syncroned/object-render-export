@@ -1,0 +1,22 @@
+# Build directories
+build/
+build-android*/
+build-android64/
+
+# Geode
+.geode/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
