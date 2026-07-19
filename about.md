@@ -14,4 +14,6 @@ Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720pâ
 
 Files are saved to the configured export folder with an auto-generated timestamp.
 
+On Windows, the **Direct Save** setting toggles between saving straight to the configured folder or showing a file picker.
+
 Made by Sync

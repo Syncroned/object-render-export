@@ -16,6 +16,8 @@ Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720pâ
 
 Files are saved to the configured export folder with an auto-generated timestamp.
 
+On Windows, the **Direct Save** setting toggles between saving straight to the configured folder or showing a file picker.
+
 ## Credits
 
 Huge thanks to [RGC Exists](https://github.com/rgc-exists) for inspiring this mod with [ObjectsToImage](https://github.com/rgc-exists/ObjectsToImage).
