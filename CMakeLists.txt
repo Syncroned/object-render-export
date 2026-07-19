@@ -12,7 +12,14 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
+# Collect source files, excluding android_media.cpp on non-Android platforms
 file(GLOB_RECURSE SOURCES src/*.cpp)
+list(FILTER SOURCES EXCLUDE REGEX ".*android_media\\.cpp$")
+
+if(ANDROID OR GEODE_IS_ANDROID OR GEODE_IS_ANDROID64 OR GEODE_IS_ANDROID32)
+    list(APPEND SOURCES src/android_media.cpp)
+endif()
+
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)

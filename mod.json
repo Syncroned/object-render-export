@@ -30,9 +30,9 @@
             "type": "bool",
             "default": false
         },
-        "enable-logs": {
-            "name": "Enable debug logs",
-            "description": "Create debug log files for troubleshooting. Logs are saved in the mod's folder. Clear logs via the export popup.",
+        "export-alpha-mask": {
+            "name": "Export alpha mask",
+            "description": "Also export a black/white alpha mask image at the same resolution as the main export.",
             "type": "bool",
             "default": false
         }
