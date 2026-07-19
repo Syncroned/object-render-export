@@ -5,7 +5,7 @@ Windows & Android
 
 ![Logo](https://raw.githubusercontent.com/Syncroned/object-render-export/refs/heads/main/logo.png)
 
-Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720p–4K), preserving editor draw order, colors, opacity, blending and hidden state.
+Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720p-4K), preserving editor draw order, colors, opacity, blending and hidden state.
 
 ## Usage
 

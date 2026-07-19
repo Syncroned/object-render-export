@@ -3,7 +3,7 @@
 **GD 2.2081 · Geode 5.7.x**  
 Windows & Android
 
-Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720p–4K), preserving editor draw order, colors, opacity, blending and hidden state.
+Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720p-4K), preserving editor draw order, colors, opacity, blending and hidden state.
 
 ## Usage
 
