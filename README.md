@@ -10,7 +10,7 @@ Exports selected editor objects as PNG / JPEG / GIF at preset resolutions (720pâ
 ## Usage
 
 1. Select one or more editor objects.
-2. Click the **EXP** button.
+2. Click the **Export** button in the edit tab.
 3. Pick a resolution and format.
 4. Enable "Transparent BG" for an alpha background (PNG / GIF).
 
