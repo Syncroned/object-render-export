@@ -1,0 +1,43 @@
+{
+    "geode": "5.8.2",
+    "gd": {
+        "win": "2.2081",
+        "android": "2.2081"
+    },
+    "id": "sync.object_render_export",
+    "name": "Object Render Export",
+    "version": "1.0.5",
+    "developer": "Sync",
+    "description": "Export selected editor objects as a PNG at any resolution, respecting z-order, blending, color channels, opacity, toggle, and pulse state.",
+    "links": { "source": "https://github.com/Syncroned/object-render-export" },
+    "resources": {
+        "spritesheets": {
+            "ObjectRenderExportButton": [
+                "resources/ExportButton.png"
+            ]
+        },
+        "files": [
+            "resources/Obj_Compatibility/Compatibility.json"
+        ]
+    },
+    "settings": {
+        "export-path": {
+            "name": "Export folder",
+            "description": "Where exported PNGs are saved. Defaults to Downloads/Exports on Android, Pictures on Windows (when direct save is enabled).",
+            "type": "folder",
+            "default": ""
+        },
+        "direct-save": {
+            "name": "Direct save (Windows)",
+            "description": "Save directly to export folder without file picker. Only affects Windows. Android always uses direct save.",
+            "type": "bool",
+            "default": false
+        },
+        "export-alpha-mask": {
+            "name": "Export alpha mask",
+            "description": "Also export a black/white alpha mask image at the same resolution as the main export.",
+            "type": "bool",
+            "default": false
+        }
+    }
+}
