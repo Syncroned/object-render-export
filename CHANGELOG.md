@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6 — 2026-08-05
+
+- Fixed the `Include Gradients` and `Include Shaders` toggles being ignored during export.
+- The flags are now read from the saved `ExportSettings` and passed through `ExportPipeline` to `SceneBuilder` and `Renderer`.
+
 ## 1.0.5 — 2026-08-03
 
 - Split `ui/ExportPopup.hpp` into `ExportSettingsPopup` and `ExportPopup` header/cpp pairs.
