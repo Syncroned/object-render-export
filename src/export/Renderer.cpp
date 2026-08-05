@@ -86,7 +86,7 @@ bool renderAndSave(CCSprite* sprite, ExportRequest const& request, AdditiveParts
         pixelops::unpremultiply(img->getData(), img->getWidth() * img->getHeight());
     }
 
-    if (img && Mod::get()->getSavedValue<bool>("export-include-shaders", false) && lel->m_shaderLayer) {
+    if (img && request.includeShaders && lel->m_shaderLayer) {
         applyShadersGPU(img, lel->m_shaderLayer, selected, worldBounds);
     }
 

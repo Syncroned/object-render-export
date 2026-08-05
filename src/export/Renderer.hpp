@@ -14,6 +14,8 @@ struct ExportRequest {
     int height = 0;
     bool transparentBg = false;
     bool cropToVisible = false;
+    bool includeGradients = false;
+    bool includeShaders = false;
     ExportFormat format = ExportFormat::PNG;
     ExportCompression compression = ExportCompression::Lossless;
     int quality = 90;

@@ -28,4 +28,4 @@ struct BorrowGuard {
 };
 
 cocos2d::CCSprite* buildExportSprite(std::vector<ObjectData> const& originalData, LevelEditorLayer* lel,
-    std::vector<BorrowedNode>& borrowedNodes, AdditiveParts& additive);
+    std::vector<BorrowedNode>& borrowedNodes, AdditiveParts& additive, bool includeGradients);

@@ -21,9 +21,11 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, bool cropT
     auto const& ids22 = get22ObjectIDs();
     auto [originalData, exportWorldBounds] = collectObjectData(selected, lel, ids22);
 
+    auto settings = loadExportSettings();
+
     std::vector<BorrowedNode> borrowedNodes;
     AdditiveParts additive;
-    CCSprite* sprite = buildExportSprite(originalData, lel, borrowedNodes, additive);
+    CCSprite* sprite = buildExportSprite(originalData, lel, borrowedNodes, additive, settings.includeGradients);
     BorrowGuard borrowGuard{borrowedNodes};
 
     ExportRequest request;
@@ -31,6 +33,8 @@ bool exportSelectedObjects(int width, int height, bool transparentBg, bool cropT
     request.height = height;
     request.transparentBg = transparentBg;
     request.cropToVisible = cropToVisible;
+    request.includeGradients = settings.includeGradients;
+    request.includeShaders = settings.includeShaders;
     request.format = format;
     request.compression = compression;
     request.quality = quality;

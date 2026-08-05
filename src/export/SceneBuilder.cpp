@@ -194,9 +194,8 @@ void addParticles(std::vector<ObjectData> const& originalData, CCSprite* sprite,
 }
 
 void addGradients(LevelEditorLayer* lel, std::vector<BorrowedNode>& borrowedNodes,
-    std::vector<DrawItem>& drawItems) {
-    if (!Mod::get()->getSavedValue<bool>("export-include-gradients", false)) return;
-    if (!lel->m_gradientLayers) return;
+    std::vector<DrawItem>& drawItems, bool includeGradients) {
+    if (!includeGradients || !lel->m_gradientLayers) return;
 
     for (auto [key, gl] : CCDictionaryExt<int, GJGradientLayer*>(lel->m_gradientLayers)) {
         if (!gl || !gl->isVisible()) continue;
@@ -304,7 +303,7 @@ BorrowGuard::~BorrowGuard() {
 }
 
 CCSprite* buildExportSprite(std::vector<ObjectData> const& originalData, LevelEditorLayer* lel,
-    std::vector<BorrowedNode>& borrowedNodes, AdditiveParts& additive) {
+    std::vector<BorrowedNode>& borrowedNodes, AdditiveParts& additive, bool includeGradients) {
     std::vector<DrawItem> drawItems;
 
     bool haveRef = false;
@@ -312,7 +311,7 @@ CCSprite* buildExportSprite(std::vector<ObjectData> const& originalData, LevelEd
 
     CCSprite* sprite = cloneObjects(originalData, lel, additive, drawItems, haveRef, refEditorPos, refLocalPos);
     addParticles(originalData, sprite, drawItems, haveRef, refEditorPos, refLocalPos);
-    addGradients(lel, borrowedNodes, drawItems);
+    addGradients(lel, borrowedNodes, drawItems, includeGradients);
     attachInDrawOrder(drawItems, sprite, additive);
 
     return sprite;
