@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.7 — 2026-08-06
+
+- Added 8K (7680×4320) and 16K (15360×8640) export resolution presets.
+- Selecting 16K now shows a warning that Geometry Dash may freeze for a while.
+- High-resolution buttons (8K / 16K) are displayed on a second row.
+
 ## 1.0.6 — 2026-08-05
 
 - Fixed the `Include Gradients` and `Include Shaders` toggles being ignored during export.

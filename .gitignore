@@ -30,3 +30,6 @@ build-*.ps1
 
 # Packaged mod builds
 *.geode
+
+# Local git hooks
+.githooks/
