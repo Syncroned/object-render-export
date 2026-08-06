@@ -22,6 +22,8 @@ protected:
         {"1080p", 1920, 1080},
         {"1440p", 2560, 1440},
         {"4K", 3840, 2160},
+        {"8K", 7680, 4320},
+        {"16K", 15360, 8640},
     };
 
     std::vector<CCMenuItemSpriteExtra*> m_presetButtons;

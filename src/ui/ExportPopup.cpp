@@ -50,10 +50,10 @@ bool ExportPopup::setup() {
     auto* presetMenu = CCMenu::create();
     presetMenu->setLayout(
         RowLayout::create()
-            ->setGap(6.f)
+            ->setGap(4.f)
             ->setAxisAlignment(AxisAlignment::Center)
     );
-    presetMenu->setContentSize({300.f, 36.f});
+    presetMenu->setContentSize({340.f, 36.f});
     presetMenu->setPosition({170.f, 185.f});
 
     for (int i = 0; i < static_cast<int>(std::size(c_presets)); ++i) {
@@ -126,6 +126,10 @@ void ExportPopup::onPreset(CCObject* sender) {
     auto& picked = c_presets[static_cast<CCNode*>(sender)->getTag()];
     m_presetW = picked.w;
     m_presetH = picked.h;
+
+    if (m_presetW == 15360 && m_presetH == 8640) {
+        FLAlertLayer::create("Warning", "Exporting at 16K may cause Geometry Dash to freeze for a while.", "OK")->show();
+    }
 
     Mod::get()->setSavedValue<int>("export-preset-w", m_presetW);
     Mod::get()->setSavedValue<int>("export-preset-h", m_presetH);
