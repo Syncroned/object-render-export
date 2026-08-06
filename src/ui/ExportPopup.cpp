@@ -47,14 +47,23 @@ bool ExportPopup::setup() {
 
     loadSavedPreset();
 
-    auto* presetMenu = CCMenu::create();
-    presetMenu->setLayout(
+    auto* topMenu = CCMenu::create();
+    topMenu->setLayout(
         RowLayout::create()
-            ->setGap(4.f)
+            ->setGap(6.f)
             ->setAxisAlignment(AxisAlignment::Center)
     );
-    presetMenu->setContentSize({340.f, 36.f});
-    presetMenu->setPosition({170.f, 185.f});
+    topMenu->setContentSize({300.f, 36.f});
+    topMenu->setPosition({170.f, 195.f});
+
+    auto* bottomMenu = CCMenu::create();
+    bottomMenu->setLayout(
+        RowLayout::create()
+            ->setGap(6.f)
+            ->setAxisAlignment(AxisAlignment::Center)
+    );
+    bottomMenu->setContentSize({140.f, 36.f});
+    bottomMenu->setPosition({170.f, 155.f});
 
     for (int i = 0; i < static_cast<int>(std::size(c_presets)); ++i) {
         auto& p = c_presets[i];
@@ -64,17 +73,19 @@ bool ExportPopup::setup() {
             menu_selector(ExportPopup::onPreset)
         );
         btn->setTag(i);
-        presetMenu->addChild(btn);
+        (i < 4 ? topMenu : bottomMenu)->addChild(btn);
         m_presetButtons.push_back(btn);
     }
 
-    presetMenu->updateLayout();
-    layer->addChild(presetMenu);
+    topMenu->updateLayout();
+    bottomMenu->updateLayout();
+    layer->addChild(topMenu);
+    layer->addChild(bottomMenu);
 
     auto dimStr = fmt::format("{} x {}", m_presetW, m_presetH);
     m_dimLabel = CCLabelBMFont::create(dimStr.c_str(), "bigFont.fnt");
     m_dimLabel->setScale(0.55f);
-    m_dimLabel->setPosition({170.f, 148.f});
+    m_dimLabel->setPosition({170.f, 118.f});
     layer->addChild(m_dimLabel);
 
     auto* gearBtn = makeIconButton("GJ_optionsBtn_001.png", 0.7f, this, menu_selector(ExportPopup::onSettings));
